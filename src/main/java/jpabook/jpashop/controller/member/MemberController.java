@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -27,7 +28,7 @@ public class MemberController {
     }
 
     @PostMapping("/member/create")
-    public String create(@Valid MemberForm memberForm, BindingResult bindingResult){
+    public String create(@Validated MemberForm memberForm, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
             return "/member/joinMember";
         }
