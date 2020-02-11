@@ -1,5 +1,6 @@
 package jpabook.jpashop.service;
 
+import jpabook.jpashop.criteria.OrderSearch;
 import jpabook.jpashop.domain.Address;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.domain.Order;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -93,9 +96,62 @@ public class OrderServiceTest {
         assertEquals("재고수량 증가", 15, album.getStockQuantity());
     }
 
+    @Test
+    public void 검색_STATUS(){
+        // orderStatus만
+        OrderSearch orderSearch = new OrderSearch();
+        orderSearch.setOrderStatus(OrderStatus.ORDER);
 
+        Member member = this.makeMember();
+        Item album = this.makeItem();
 
-    // 주문 취소 테스트
-    // 재고 증가
+        Long orderId = orderService.order(member.getId(), album.getId(), 10);
+        Order order = orderService.findOne(orderId);
+        List<Order> findByStatus = orderService.findByCriteira(orderSearch);
+        assertEquals("주문상태로만 조회", 1, findByStatus.size());
+    }
 
+        @Test
+    public void 검색_Name(){
+        OrderSearch orderSearch = new OrderSearch();
+        orderSearch.setMemberName("ki");
+
+        Member member = this.makeMember();
+        Item album = this.makeItem();
+
+        Long orderId = orderService.order(member.getId(), album.getId(), 10);
+        Order order = orderService.findOne(orderId);
+        List<Order> findByStatus = orderService.findByCriteira(orderSearch);
+        assertEquals("이름으로만 조회", 1, findByStatus.size());
+    }
+
+        @Test
+    public void 검색_ALL(){
+        // orderStatus만
+        OrderSearch orderSearch = new OrderSearch();
+        orderSearch.setOrderStatus(OrderStatus.ORDER);
+        orderSearch.setMemberName("ki");
+
+        Member member = this.makeMember();
+        Item album = this.makeItem();
+
+        Long orderId = orderService.order(member.getId(), album.getId(), 10);
+        Order order = orderService.findOne(orderId);
+        List<Order> findByStatus = orderService.findByCriteira(orderSearch);
+        assertEquals("전체조건 조회", 1, findByStatus.size());
+    }
+
+        @Test
+    public void 검색_NONE(){
+        // orderStatus만
+        OrderSearch orderSearch = new OrderSearch();
+
+        Member member = this.makeMember();
+        Item album = this.makeItem();
+
+        Long orderId = orderService.order(member.getId(), album.getId(), 10);
+        Order order = orderService.findOne(orderId);
+        List<Order> findByStatus = orderService.findByCriteira(orderSearch);
+        assertEquals("조건 미입력 조회", 1, findByStatus.size());
+    }
 }

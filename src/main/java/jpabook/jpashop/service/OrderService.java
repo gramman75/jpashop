@@ -1,5 +1,6 @@
 package jpabook.jpashop.service;
 
+import jpabook.jpashop.criteria.OrderSearch;
 import jpabook.jpashop.domain.*;
 import jpabook.jpashop.domain.item.Item;
 import jpabook.jpashop.repository.ItemRepository;
@@ -8,6 +9,8 @@ import jpabook.jpashop.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -41,6 +44,10 @@ public class OrderService {
 
     public Order findOne(Long id){
         return orderRepository.findOrder(id);
+    }
+
+    public List<Order> findByCriteira(OrderSearch orderSearch){
+        return orderRepository.findByCriteria(orderSearch);
     }
 
 }

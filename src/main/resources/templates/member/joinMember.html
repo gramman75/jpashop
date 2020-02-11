@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="/webjars/bootstrap/4.4.1/css/bootstrap.css" />
+    <title>회원가입</title>
+</head>
+<body>
+<div class="container">
+  <form role="form" method="post" action="/member/create" th:object="${memberForm}">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" id="name" th:field="*{name}"
+             th:class="${#fields.hasErrors('name')} ? 'form-control fieldError' : 'form-control'" >
+        <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Incorrect Data</p>
+    </div>
+    <div class="form-group">
+      <label for="city">City</label>
+      <input type="text" class="form-control" id="city" th:field="*{city}">
+    </div>
+    <div class="form-group">
+      <label for="street">Street</label>
+      <input type="text" class="form-control" id="street" th:field="*{street}">
+    </div>
+    <div class="form-group">
+      <label for="zipcode">Zip Code</label>
+      <input type="text" class="form-control" id="zipcode" th:field="*{zipcode}">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+
+</div>
+
+</body>
+</html>
