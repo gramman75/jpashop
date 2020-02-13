@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header (title=${'Item등록'})">
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <div class="container">
+        <div th:replace="fragments/header :: home"></div>
+
+        <table class="table">
+            <thead class="thead-dark">
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Artist</th>
+            <th>Etc</th>
+            </thead>
+            <tbody>
+                <tr th:each="album: ${albums}">
+                    <td th:text="${album.id}"></td>
+                    <td th:text="${album.name}"></td>
+                    <td th:text="${album.price}"></td>
+                    <td th:text="${album.stockQuantity}"></td>
+                    <td th:text="${album.artist}"></td>
+                    <td th:text="${album.etc}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    </div>
+
+</body>
+</html>

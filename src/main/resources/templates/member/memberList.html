@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header ::  header (title=${'회원목록'})">
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <div th:replace="fragments/header :: home"></div>
+    <div class="container">
+        <table class="table">
+            <thead class="thead-dark">
+            <th th:text="#{cm.name}">Name</th>
+            <th th:text="#{cm.city}">City</th>
+            <th th:text="#{cm.street}">Street</th>
+            <th th:text="#{cm.zipcode}">Zip code</th>
+            </thead>
+            <tbody>
+                <tr th:each="member : ${members}">
+                    <td th:text="${member.name}"></td>
+                    <td th:text="${member.address?.city}"></td>
+                    <td th:text="${member.address?.street}"></td>
+                    <td th:text="${member.address?.zipcode}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+
+</body>
+</html>
