@@ -1,6 +1,7 @@
-package jpabook.jpashop.controller.member;
+package jpabook.jpashop.controller.item;
 
 import jpabook.jpashop.domain.item.Album;
+import jpabook.jpashop.domain.item.Item;
 import jpabook.jpashop.form.item.AlbumForm;
 import jpabook.jpashop.service.ItemService;
 import lombok.RequiredArgsConstructor;
@@ -8,9 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -47,4 +46,40 @@ public class ItemController {
         model.addAttribute("albums", itemService.findItems());
         return "item/listItem";
     }
+
+    @GetMapping("/item/update/{itemId}")
+    public String updateForm(@PathVariable Long itemId, Model model){
+        Album album = (Album)itemService.findOne(itemId);
+        AlbumForm albumForm = new AlbumForm();
+        albumForm.setId(album.getId());
+        albumForm.setName(album.getName());
+        albumForm.setPrice(album.getPrice());
+        albumForm.setStockQuantity(album.getStockQuantity());
+        albumForm.setArtist(album.getArtist());
+        albumForm.setEtc(album.getEtc());
+
+        model.addAttribute("albumForm", albumForm);
+
+        return "item/updateItem";
+    }
+
+    @PostMapping("/item/update")
+    public String update(@Validated AlbumForm albumForm, BindingResult result){
+        if (result.hasErrors()){
+            return "item/updateItem";
+        }
+
+        Album album = new Album();
+        album.setId(albumForm.getId());
+        album.setName(albumForm.getName());
+        album.setPrice(albumForm.getPrice());
+        album.setStockQuantity(albumForm.getStockQuantity());
+        album.setArtist(albumForm.getArtist());
+        album.setEtc(albumForm.getEtc());
+
+        itemService.saveItem(album);
+
+        return "redirect:/item/list";
+    }
+
 }
