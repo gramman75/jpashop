@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header (title=${'주문내역'})">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <div class="container">
+        <form action="" th:object="${orderSearch}">
+            <div class="form-row align-items-center">
+                <div class="col-auto">
+                    <label class="sr-only" th:for="memberName">이름</label>
+                    <input type="text" th:field="*{memberName}" class="form-control mb-2" />
+                </div>
+                <div class="col-auto">
+                    <label class="sr-only" th:for="orderStatus">주문상태</label>
+                    <select th:field="*{orderStatus}" class="form-control mb-2">
+                        <option th:each="status : ${T(jpabook.jpashop.domain.OrderStatus).values()}"
+                                th:value="${status}"
+                                th:text="${status}">option</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary mb-2">Submit</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</body>
+</html>

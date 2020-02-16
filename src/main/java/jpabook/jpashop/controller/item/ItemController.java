@@ -38,7 +38,7 @@ public class ItemController {
 
         itemService.saveItem(album);
 
-        return "/item/listItem";
+        return "redirect:/item/list";
     }
 
     @GetMapping("/item/list")
@@ -64,20 +64,21 @@ public class ItemController {
     }
 
     @PostMapping("/item/update")
-    public String update(@Validated AlbumForm albumForm, BindingResult result){
+    public String update(@Validated AlbumForm albumForm, @RequestParam Long id,  BindingResult result){
         if (result.hasErrors()){
             return "item/updateItem";
         }
 
-        Album album = new Album();
-        album.setId(albumForm.getId());
-        album.setName(albumForm.getName());
-        album.setPrice(albumForm.getPrice());
-        album.setStockQuantity(albumForm.getStockQuantity());
-        album.setArtist(albumForm.getArtist());
-        album.setEtc(albumForm.getEtc());
+        itemService.updateItem(id, albumForm);
 
-        itemService.saveItem(album);
+//        Album album = (Album)itemService.findOne(albumForm.getId());
+//
+//        album.setId(albumForm.getId());
+//        album.setName(albumForm.getName());
+//        album.setPrice(albumForm.getPrice());
+//        album.setStockQuantity(albumForm.getStockQuantity());
+//        album.setArtist(albumForm.getArtist());
+//        album.setEtc(albumForm.getEtc());
 
         return "redirect:/item/list";
     }
