@@ -5,25 +5,53 @@
 </head>
 <body>
     <div class="container">
-        <form action="" th:object="${orderSearch}">
+        <div th:replace="fragments/header :: home"></div>
+        <form action="/order/listSearch" th:object="${orderSearch}">
             <div class="form-row align-items-center">
                 <div class="col-auto">
                     <label class="sr-only" th:for="memberName">이름</label>
-                    <input type="text" th:field="*{memberName}" class="form-control mb-2" />
+                    <input type="text" th:field="*{memberName}" class="form-control mb-2" placeholder="회원이름" />
                 </div>
                 <div class="col-auto">
                     <label class="sr-only" th:for="orderStatus">주문상태</label>
                     <select th:field="*{orderStatus}" class="form-control mb-2">
+                        <option value="">주문상태</option>
                         <option th:each="status : ${T(jpabook.jpashop.domain.OrderStatus).values()}"
                                 th:value="${status}"
-                                th:text="${status}">option</option>
+                                th:text="${status}"
+                                th:selected="${status == orderSearch.orderStatus}">option</option>
                     </select>
                 </div>
                 <div class="col-auto">
+
                     <button type="submit" class="btn btn-primary mb-2">Submit</button>
                 </div>
             </div>
-        </form>
+         </form>
+         <table class="table">
+            <thead class="thead-dark">
+            <th>ID</th>
+            <th>회원명</th>
+            <th>상품이름</th>
+            <th>상품주문가격</th>
+            <th>주문수량</th>
+            <th>상태</th>
+            <th>일시</th>
+            <th>취소</th>
+            </thead>
+            <tbody>
+                <tr th:each="order: ${orders}">
+                    <td th:text="${order.id}"></td>
+                    <td th:text="${order.member.name}"></td>
+                    <td th:text="${order.orderItems[0].item.name}"></td>
+                    <td th:text="${order.orderItems[0].orderPrice}"></td>
+                    <td th:text="${order.orderItems[0].count}"></td>
+                    <td th:text="${order.status}"></td>
+                    <td th:text="${order.orderDate}"></td>
+                    <td><a  th:if="${order.status.name() == 'ORDER'}" class="btn btn-primary" th:href="@{/order/cancel/{id} (id=${order.id})}">Cancel</a></td>
+                </tr>
+            </tbody>
+        </table>
 
     </div>
 </body>
