@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header (title=${'Item등록'})">
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+        <h1>Custom Error</h1>
+        <ul>
+                <li><span th:text="${customMessage}"></span></li>
+        </ul>
+</body>
+</html>
