@@ -1,6 +1,7 @@
 package jpabook.jpashop.domain;
 
 
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

@@ -51,4 +51,7 @@ public class OrderService {
         return orderRepository.findByCriteria(orderSearch);
     }
 
+    public List<Order> findWithMemberDelivery() {
+        return orderRepository.findWithMemberDelivery();
+    }
 }

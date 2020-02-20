@@ -35,6 +35,11 @@ public class MemberService {
         if (!memberRepository.findByName(member.getName()).isEmpty()){
             throw new IllegalStateException("중복되는 회원이 있습니다.");
         }
+    }
 
+    @Transactional
+    public void update(Long id, String name){
+        Member member = memberRepository.findOne(id);
+        member.setName(name);
     }
 }
