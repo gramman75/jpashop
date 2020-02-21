@@ -54,4 +54,13 @@ public class OrderService {
     public List<Order> findWithMemberDelivery() {
         return orderRepository.findWithMemberDelivery();
     }
+
+
+    public List<Order> findWithMemberDelivery(int offset, int limit) {
+        return orderRepository.findWithMemberDelivery(offset, limit);
+    }
+
+    public List<Order> findWithItem() throws Exception {
+        return orderRepository.findWithItem();
+    }
 }

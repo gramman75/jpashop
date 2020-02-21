@@ -9,9 +9,12 @@ import lombok.NoArgsConstructor;
 @Data
 public class MemberDto {
     public MemberDto(Member member){
+        this.id = member.getId();
         this.name = member.getName();
         this.address = member.getAddress();
     }
+
+    private Long id;
     private String name;
 
     private Address address;

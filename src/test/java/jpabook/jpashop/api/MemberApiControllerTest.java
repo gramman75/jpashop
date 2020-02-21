@@ -18,16 +18,12 @@ import org.springframework.util.MultiValueMap;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@AutoConfigureMockMvc
-@Transactional
-//@Rollback(false)
-public class MemberApiControllerTest {
+public class MemberApiControllerTest extends BaseApiControllerTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -45,8 +41,8 @@ public class MemberApiControllerTest {
                     .content("{\"name\" : \"aaa\"}")
                     )
                 .andExpect(status().isOk())
-                .andDo(print())
-                .andExpect(jsonPath("$.id").value("lee"));
+//                .andDo(print())
+                .andExpect(jsonPath("$.id").value("1"));
 
     }
 
@@ -61,11 +57,24 @@ public class MemberApiControllerTest {
                        .content("{\"name\" : \"lee\"}")
                        )
                 .andExpect(status().isOk())
+//                .andDo(print())
+                .andExpect(jsonPath("$.name").value("lee"));
+    }
+
+    @Test
+    public void 회원조회API() throws Exception {
+        Member member = new Member();
+        member.setName("kim");
+        Member member1 = new Member();
+        member1.setName("lee");
+        Long memberId = memberService.join(member);
+        Long memberId1 = memberService.join(member1);
+
+        mockMvc.perform(get("/api/v3/members"))
+                .andExpect(status().isOk())
                 .andDo(print())
-                .andExpect(jsonPath("$.name").value("kim"));
-
-
-
+                .andExpect(jsonPath("$.count").value("2"))
+                .andExpect(jsonPath("$.data[?(@.id=='"+memberId.toString()+"')].name").value("kim"));
 
 
     }

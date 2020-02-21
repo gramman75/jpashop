@@ -7,10 +7,9 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     properties:
       hibernate:
-        default_batch_fetch_size: 1000
         show_sql: true
         format_sql: true
 
@@ -18,5 +17,4 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
-
 

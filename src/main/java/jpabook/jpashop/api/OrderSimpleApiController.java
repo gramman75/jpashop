@@ -18,7 +18,7 @@ public class OrderSimpleApiController {
 
     private final OrderService orderService;
 
-    @GetMapping("/api/v2/orders")
+    @GetMapping("/api/v2/simpleorders")
     public Result ordersV2(){
         List<Order> orders = orderService.findByCriteira(new OrderSearch());
 
@@ -29,7 +29,7 @@ public class OrderSimpleApiController {
         return new Result(collect.size(),collect);
     }
 
-    @GetMapping("/api/v3/orders")
+    @GetMapping("/api/v3/simpleorders")
     public Result orderV3(){
         List<Order> orders = orderService.findWithMemberDelivery();
 
