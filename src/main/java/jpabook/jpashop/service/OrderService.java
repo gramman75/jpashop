@@ -3,20 +3,23 @@ package jpabook.jpashop.service;
 import jpabook.jpashop.criteria.OrderSearch;
 import jpabook.jpashop.domain.*;
 import jpabook.jpashop.domain.item.Item;
-import jpabook.jpashop.repository.ItemRepository;
-import jpabook.jpashop.repository.MemberRepository;
-import jpabook.jpashop.repository.OrderRepository;
+import jpabook.jpashop.dto.order.OrderQueryDto;
+import jpabook.jpashop.dto.orderItemDto.OrderItemDto;
+import jpabook.jpashop.dto.orderItemDto.OrderItemQueryDto;
+import jpabook.jpashop.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional(readOnly = true)
 public class OrderService {
 
-    @Autowired OrderRepository orderRepository;
+    @Autowired
+    OrderRepositoryInterface orderRepository;
     @Autowired MemberRepository memberRepository;
     @Autowired ItemRepository itemRepository;
 
@@ -62,5 +65,17 @@ public class OrderService {
 
     public List<Order> findWithItem() throws Exception {
         return orderRepository.findWithItem();
+    }
+
+    public List<OrderQueryDto> findOrderQueryDto() {
+        return orderRepository.findOrderQueryDto();
+    }
+
+    public List<OrderItemQueryDto> findOrderItemQueryDto(Long id) {
+        return orderRepository.findOrderItemQueryDto(id);
+    }
+
+    public Map<Long, List<OrderItemQueryDto>> findOrderItemMap(List<OrderQueryDto> orders) {
+        return orderRepository.findOrderItemMap(orders);
     }
 }

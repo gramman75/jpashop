@@ -1,16 +1,13 @@
 package jpabook.jpashop.repository;
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jpabook.jpashop.criteria.OrderSearch;
-import jpabook.jpashop.domain.Member;
+import jpabook.jpashop.domain.*;
 import jpabook.jpashop.domain.Order;
-import jpabook.jpashop.domain.QMember;
-import jpabook.jpashop.domain.QOrder;
 import jpabook.jpashop.dto.order.OrderQueryDto;
-import jpabook.jpashop.dto.orderItemDto.OrderItemDto;
 import jpabook.jpashop.dto.orderItemDto.OrderItemQueryDto;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -21,19 +18,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.querydsl.core.group.GroupBy.groupBy;
+import static com.querydsl.core.types.Projections.list;
+
 @Repository
-@RequiredArgsConstructor
-public class OrderRepository implements OrderRepositoryInterface{
-
+@Primary
+public class OrderRepositoryQdsl implements OrderRepositoryInterface {
     private final EntityManager em;
+    private final JPAQueryFactory query;
 
+    public OrderRepositoryQdsl(EntityManager em){
+        this.em = em;
+        this.query = new JPAQueryFactory(em);
+    }
 
     public void save(Order order){
         em.persist(order);
     }
 
     public Order findOrder(Long id){
-        return em.find(Order.class, id);
+        return query
+                .selectFrom(QOrder.order)
+                .where(QOrder.order.id.eq(id))
+                .fetchOne();
+
     }
 
     // search
@@ -78,33 +86,84 @@ public class OrderRepository implements OrderRepositoryInterface{
     }
 
     public List<Order> findWithMemberDelivery() {
-        return em.createQuery("select o from Order o " +
-                                        "join fetch o.member m " +
-                                        "join fetch o.delivery", Order.class).getResultList();
+        return query
+                .selectFrom(QOrder.order)
+                .innerJoin(QOrder.order.member, QMember.member).fetchJoin()
+                .innerJoin(QOrder.order.delivery, QDelivery.delivery).fetchJoin()
+                .fetch();
     }
 
 
     public List<Order> findWithMemberDelivery(int offset, int limit) {
-        return em.createQuery("select o from Order o " +
-                                        "join fetch o.member m " +
-                                        "join fetch o.delivery", Order.class)
-                .setFirstResult(offset)
-                .setMaxResults(limit)
-                .getResultList();
+         List<Order> orders = query
+                .selectFrom(QOrder.order)
+                .innerJoin(QOrder.order.member, QMember.member).fetchJoin()
+                .innerJoin(QOrder.order.delivery, QDelivery.delivery).fetchJoin()
+                 .offset(offset)
+                 .limit(limit)
+                .fetch();
+
+         return orders;
+
+//        return em.createQuery("select o from Order o " +
+//                                        "join fetch o.member m " +
+//                                        "join fetch o.delivery", Order.class)
+//                .setFirstResult(offset)
+//                .setMaxResults(limit)
+//                .getResultList();
     }
 
     public List<Order> findWithItem() throws Exception{
-        return em.createQuery( "select distinct o from Order o " +
-                                        "join fetch o.member m " +
-                                        "join fetch o.delivery d " +
-                                        "join fetch o.orderItems oi " +
-                                        "join fetch oi.item i", Order.class).getResultList();
+         List<Order> orders = query
+                .selectFrom(QOrder.order)
+                .innerJoin(QOrder.order.member, QMember.member).fetchJoin()
+                .innerJoin(QOrder.order.delivery, QDelivery.delivery).fetchJoin()
+                 .innerJoin(QOrder.order.orderItems, QOrderItem.orderItem)
+                 .distinct()
+                .fetch();
+
+//         Map<Long, List<OrderItem>> orderItems = queryOrderItems(orders);
+//
+//         orders.stream()
+//                 .forEach(order -> order.setOrderItems(orderItems.get(order.getId())));
+
+         return orders;
+
+
+
+//        return em.createQuery( "select distinct o from Order o " +
+//                                        "join fetch o.member m " +
+//                                        "join fetch o.delivery d " +
+//                                        "join fetch o.orderItems oi " +
+//                                        "join fetch oi.item i", Order.class).getResultList();
+    }
+
+    private Map<Long, List<OrderItem>> queryOrderItems(List<Order> orders){
+         List<Long> orderMap = orders.stream()
+                .map(order -> order.getId())
+                .collect(Collectors.toList());
+
+        Member member = new Member();
+
+        return query
+                 .selectFrom(QOrderItem.orderItem)
+                 .where(QOrderItem.orderItem.id.in(orderMap))
+                 .fetch().stream().collect(Collectors.groupingBy(OrderItem::getId));
+
+
     }
 
     public List<OrderQueryDto> findOrderQueryDto() {
-        return em.createQuery("select new jpabook.jpashop.dto.order.OrderQueryDto(o) from Order o " +
-                                        "join o.member m " +
-                                        "join o.delivery", OrderQueryDto.class).getResultList();
+        return query
+                .select(Projections.constructor(OrderQueryDto.class, QOrder.order))
+                .from(QOrder.order)
+                .innerJoin(QOrder.order.member, QMember.member)
+                .innerJoin(QOrder.order.delivery, QDelivery.delivery)
+                .fetch();
+
+//        return em.createQuery("select new jpabook.jpashop.dto.order.OrderQueryDto(o) from Order o " +
+//                                        "join o.member m " +
+//                                        "join o.delivery", OrderQueryDto.class).getResultList();
     }
 
 
@@ -127,4 +186,5 @@ public class OrderRepository implements OrderRepositoryInterface{
 
         return orderItems.stream().collect(Collectors.groupingBy(OrderItemQueryDto::getId));
     }
+
 }

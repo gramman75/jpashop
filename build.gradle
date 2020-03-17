@@ -1,8 +1,24 @@
+
+//querydsl 추가
+buildscript {
+    ext {
+        querydslPluginVersion = '1.0.10' // 플러그인 버전
+    }
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" } // 플러그인 저장소
+    }
+    dependencies {
+        classpath("gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:${querydslPluginVersion}") // querydsl 플러그인 의존성 등록
+    }
+}
 plugins {
 	id 'org.springframework.boot' version '2.3.0.BUILD-SNAPSHOT'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
 }
+//querydsl 추가
+apply plugin: "com.ewerk.gradle.plugins.querydsl"
+
 
 group = 'jpabook'
 version = '0.0.1-SNAPSHOT'
@@ -48,7 +64,10 @@ dependencies {
 //	compile group: 'javax.validation', name: 'validation-api', version: '1.1.0.Final'
 
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation
-compile group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.2.4.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.2.4.RELEASE'
+    //querydsl 추가
+	compile("com.querydsl:querydsl-jpa") // querydsl
+	compile("com.querydsl:querydsl-apt") // querydsl
 
 
 
@@ -56,6 +75,31 @@ compile group: 'org.springframework.boot', name: 'spring-boot-starter-validation
 
 
 }
+
+//querydsl 추가
+def querydslDir = 'src/main/generated'
+	querydsl {
+		library = "com.querydsl:querydsl-apt"
+		jpa = true
+		querydslSourcesDir = querydslDir
+	}
+
+sourceSets {
+main {
+	java {
+		srcDirs = ['src/main/java', querydslDir]
+		}
+	}
+}
+
+compileQuerydsl{
+	options.annotationProcessorPath = configurations.querydsl
+}
+configurations {
+	querydsl.extendsFrom compileClasspath
+}
+
+
 
 test {
 	useJUnitPlatform{

@@ -7,6 +7,7 @@ spring:
 
   jpa:
     hibernate:
+      open-in-view: false
       ddl-auto: validate
     properties:
       hibernate:

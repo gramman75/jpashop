@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class MemberRepository {
+public class MemberRepository implements MemberRepositoryInterface{
 
     private final EntityManager em;
 
