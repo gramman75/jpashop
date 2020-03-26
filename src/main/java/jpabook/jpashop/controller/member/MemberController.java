@@ -46,6 +46,7 @@ public class MemberController {
         try{
             memberService.join(member);
         } catch (Exception e){
+            e.printStackTrace();
 //            FieldError nameFileError = new FieldError("memberForm", "name", "중복 아이디입니다.");
             FieldError nameFileError = new FieldError("memberForm"
                     , "name"

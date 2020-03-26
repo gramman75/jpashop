@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Profile;
 
 import javax.sql.DataSource;
 
-@Configuration
+//@Configuration
 //@Profile("cloud")
 public class CloudDatabaseConfig extends AbstractCloudConfig {
 
@@ -37,7 +37,7 @@ public class CloudDatabaseConfig extends AbstractCloudConfig {
 	public DataSourceProperties dataSourceProperties() {
 		CfJdbcEnv cfJdbcEnv = new CfJdbcEnv();
 		DataSourceProperties properties = new DataSourceProperties();
-		CfCredentials hanaCredentials = cfJdbcEnv.findCredentialsByName("spring");
+		CfCredentials hanaCredentials = cfJdbcEnv.findCredentialsByName("spring-spring-db-hdi-container-P19wFoCsdynNgCV4L1s");
 
 		if (hanaCredentials != null) {
 

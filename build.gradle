@@ -91,7 +91,7 @@ compile group: 'io.pivotal.cfenv', name: 'java-cfenv-boot', version: '2.1.1.RELE
 }
 
 //querydsl 추가
-def querydslDir = 'src/main/generated'
+def querydslDir = 'build/generated'
 	querydsl {
 		library = "com.querydsl:querydsl-apt"
 		jpa = true

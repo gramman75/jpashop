@@ -32,7 +32,9 @@ public class MemberService {
     }
 
     private void validateDuplicateMember(Member member) {
-        if (!memberRepository.findByName(member.getName()).isEmpty()){
+        System.out.println("=== step 1 ===");
+        if (memberRepository.findByName(member.getName()).size() != 0){
+            System.out.println("=== step 2 ===");
             throw new IllegalStateException("중복되는 회원이 있습니다.");
         }
     }

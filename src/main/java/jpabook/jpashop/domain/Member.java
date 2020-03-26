@@ -11,19 +11,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@SequenceGenerator(
-        name = "MEMBER_SEQ_GENERATOR",
-        sequenceName = "MEMBER_SEQ",
-        initialValue = 1, allocationSize = 50
-)
+//@SequenceGenerator(
+//        name = "MEMBER_SEQ_GENERATOR",
+//        sequenceName = "MEMBER_SEQ",
+//        initialValue = 1, allocationSize = 50
+//)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter @Setter
 public class Member {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "MEMBER_SEQ_GENERATOR")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(
+//            strategy = GenerationType.SEQUENCE,
+//            generator = "MEMBER_SEQ_GENERATOR")
     @Column(name = "MEMBER_ID")
     private Long id;
 

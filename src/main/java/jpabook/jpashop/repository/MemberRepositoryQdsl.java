@@ -3,6 +3,7 @@ package jpabook.jpashop.repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.domain.QMember;
+import jpabook.jpashop.dto.order.OrderDto;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.Entity;
@@ -42,4 +43,5 @@ public class MemberRepositoryQdsl implements MemberRepositoryInterface {
                 .where(QMember.member.name.eq(name))
                 .fetch();
     }
+    
 }
